@@ -1,33 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
-import constants from "../../constants";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { getImageFromCanvas } from "../../surfaceGenerator";
 import { CanvasContainer } from "./styles";
 
 const CanvasScene = () => {
   const mountRef = useRef(document.createElement("div"));
-
-  const getMaterials = () => {
-    return {
-      water: new THREE.MeshBasicMaterial({
-        color: constants.colors.surfaces.water,
-      }),
-      land: new THREE.MeshBasicMaterial({
-        color: constants.colors.surfaces.land,
-      }),
-      mountains: new THREE.MeshBasicMaterial({
-        color: constants.colors.surfaces.mountains,
-      }),
-      snow: new THREE.MeshBasicMaterial({
-        color: constants.colors.surfaces.snow,
-      }),
-    };
-  };
-
-  const getSphere = () => {
-    const geometry = new THREE.SphereGeometry(15, 30, 30);
-    const material = getMaterials().water;
-    return new THREE.Mesh(geometry, material);
-  };
 
   useEffect((): any => {
     const scene = new THREE.Scene();
@@ -38,19 +16,30 @@ const CanvasScene = () => {
       1000
     );
     const renderer = new THREE.WebGLRenderer();
+    const controls = new OrbitControls(camera, renderer.domElement);
 
     renderer.setSize(window.innerWidth, window.innerHeight);
 
     mountRef.current.appendChild(renderer.domElement);
 
-    const sphere = getSphere();
+    const loader = new THREE.TextureLoader();
+    const geometry = new THREE.SphereGeometry(15, 30, 30);
+    const texture = loader.load(getImageFromCanvas());
+    const materials = new THREE.MeshBasicMaterial({
+      map: texture,
+    });
+
+    const sphere = new THREE.Mesh(geometry, materials);
+    console.log(sphere);
     scene.add(sphere);
     camera.position.z = 30;
+    controls.update();
 
     const animate = function () {
       requestAnimationFrame(animate);
-      sphere.rotation.x += 0.01;
-      sphere.rotation.y += 0.01;
+      //   sphere.rotation.x += 0.01;
+      //   sphere.rotation.y += 0.01;
+      controls.update();
       renderer.render(scene, camera);
     };
 
@@ -59,7 +48,11 @@ const CanvasScene = () => {
     return () => mountRef.current.removeChild(renderer.domElement);
   }, []);
 
-  return <CanvasContainer ref={mountRef}></CanvasContainer>;
+  return (
+    <>
+      <CanvasContainer ref={mountRef}></CanvasContainer>
+    </>
+  );
 };
 
 export default CanvasScene;
