@@ -2,7 +2,7 @@ const constants = {
   colors: {
     surfaces: {
       water: "blue",
-      land: "brown",
+      land: "green",
       mountains: "gray",
       snow: "white",
     },

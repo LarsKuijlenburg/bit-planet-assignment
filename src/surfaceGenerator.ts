@@ -8,14 +8,15 @@ export const getImageFromCanvas = () => {
   return canvas.toDataURL();
 };
 
+// Loop through canvas, set random surface for each 10x10 pixel block
 const drawLoop = (canvas: HTMLCanvasElement) => {
   const ctx = canvas.getContext("2d");
   if (ctx !== null) {
-    for (let i = 0; i < canvas.width; i += 10) {
-      for (let j = 0; j < canvas.height; j += 10) {
+    for (let i = 0; i < canvas.width; i += 5) {
+      for (let j = 0; j < canvas.height; j += 5) {
         ctx.beginPath();
         ctx.fillStyle = pickColor();
-        ctx.rect(i, j, 10, 10);
+        ctx.rect(i, j, 5, 5);
         ctx.fill();
         ctx.closePath();
       }
@@ -25,19 +26,13 @@ const drawLoop = (canvas: HTMLCanvasElement) => {
 
 const pickColor = () => {
   const number = getRandomNumber();
-  switch (number) {
-    case 0:
-      return constants.colors.surfaces.water;
-    case 1:
-      return constants.colors.surfaces.land;
-    case 2:
-      return constants.colors.surfaces.mountains;
-    default:
-      return constants.colors.surfaces.snow;
-  }
+  if (number < 7) return constants.colors.surfaces.water;
+  if (number > 6 && number < 16) return constants.colors.surfaces.land;
+  if (number > 15 && number < 19) return constants.colors.surfaces.mountains;
+  return constants.colors.surfaces.snow;
 };
 
 const getRandomNumber = () => {
-  const random = Math.floor((Math.random() * 100) / 25);
+  const random = Math.floor((Math.random() * 100) / 5);
   return random;
 };
