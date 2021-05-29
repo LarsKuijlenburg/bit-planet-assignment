@@ -23,7 +23,7 @@ const CanvasScene = () => {
     mountRef.current.appendChild(renderer.domElement);
 
     const loader = new THREE.TextureLoader();
-    const geometry = new THREE.SphereGeometry(15, 30, 30);
+    const geometry = new THREE.SphereGeometry(5, 15, 15);
     const texture = loader.load(getImageFromCanvas());
     const materials = new THREE.MeshBasicMaterial({
       map: texture,
@@ -32,7 +32,7 @@ const CanvasScene = () => {
     const sphere = new THREE.Mesh(geometry, materials);
     console.log(sphere);
     scene.add(sphere);
-    camera.position.z = 30;
+    camera.position.z = 10;
     controls.update();
 
     const animate = function () {
