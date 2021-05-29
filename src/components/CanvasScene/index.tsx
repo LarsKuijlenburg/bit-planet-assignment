@@ -4,7 +4,9 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { getImageFromCanvas } from "../../surfaceGenerator";
 import { CanvasContainer } from "./styles";
 
-const CanvasScene = () => {
+const CanvasScene: React.FC<{ onFinishLoading: () => void }> = ({
+  onFinishLoading,
+}) => {
   const mountRef = useRef(document.createElement("div"));
 
   useEffect((): any => {
@@ -36,8 +38,6 @@ const CanvasScene = () => {
 
     const animate = function () {
       requestAnimationFrame(animate);
-      //   sphere.rotation.x += 0.01;
-      //   sphere.rotation.y += 0.01;
       controls.update();
       renderer.render(scene, camera);
     };
@@ -47,7 +47,7 @@ const CanvasScene = () => {
     return () => mountRef.current.removeChild(renderer.domElement);
   }, []);
 
-  return <CanvasContainer ref={mountRef}></CanvasContainer>;
+  return <CanvasContainer ref={mountRef} />;
 };
 
 export default CanvasScene;
