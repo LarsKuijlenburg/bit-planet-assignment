@@ -19,26 +19,46 @@ const drawLoop = (canvas: HTMLCanvasElement) => {
       for (let j = 0; j < canvas.height; j++) {
         const elevation =
           simplex.noise3D(i / 20, j / 20, Math.random() / 20) * 0.5 + 0.5;
+        const population =
+          simplex.noise3D(i / 15, j / 15, Math.random() / 15) * 0.5 + 0.5;
 
-        // Draw to canvas
-        ctx.beginPath();
-        ctx.fillStyle = pickColor(elevation * 100);
-        ctx.rect(i, j, 1, 1);
-        ctx.fill();
-        ctx.closePath();
+        const fillStyle = pickColor(elevation, population);
+        draw(ctx, i, j, fillStyle);
       }
     }
   }
 };
 
-const pickColor = (elevation: number) => {
-  if (elevation < constants.maxElevations.water)
-    return constants.colors.surfaces.water;
-  if (elevation < constants.maxElevations.sand)
-    return constants.colors.surfaces.sand;
-  if (elevation < constants.maxElevations.land)
-    return constants.colors.surfaces.land;
-  if (elevation < constants.maxElevations.mountains)
-    return constants.colors.surfaces.mountains;
-  return constants.colors.surfaces.snow;
+const draw = (
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  fillStyle: string
+) => {
+  ctx.beginPath();
+  ctx.fillStyle = fillStyle;
+  ctx.rect(x, y, 1, 1);
+  ctx.fill();
+  ctx.closePath();
+};
+
+const pickColor = (elevation: number, population: number) => {
+  const { colors, maxElevations, maxPopulations } = constants;
+
+  if (elevation < maxElevations.water) return colors.surfaces.water;
+
+  if (elevation < maxElevations.sand) return colors.surfaces.sand;
+
+  if (elevation < maxElevations.land) {
+    if (population > maxPopulations.city) return colors.surfaces.city;
+
+    return colors.surfaces.land;
+  }
+
+  if (elevation < maxElevations.mountains) return colors.surfaces.mountains;
+
+  if (population > maxPopulations.skiResort) {
+    return colors.surfaces.skiResort;
+  }
+  return colors.surfaces.snow;
 };
