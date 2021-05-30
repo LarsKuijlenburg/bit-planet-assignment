@@ -18,6 +18,10 @@ const Legend: React.FC = () => {
         <Description>Water</Description>
       </LegendItem>
       <LegendItem>
+        <ColorIndicator color={surfaces.sand} />
+        <Description>Sand</Description>
+      </LegendItem>
+      <LegendItem>
         <ColorIndicator color={surfaces.land} />
         <Description>Land</Description>
       </LegendItem>

@@ -43,6 +43,7 @@ const CanvasScene: React.FC<{ onFinishLoading: () => void }> = ({
     };
 
     animate();
+    onFinishLoading();
 
     return () => mountRef.current.removeChild(renderer.domElement);
   }, []);
